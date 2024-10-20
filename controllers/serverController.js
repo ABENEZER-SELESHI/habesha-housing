@@ -1,6 +1,6 @@
 // serverController.js
-const Housing = require('../models/serverModel.js');
 const RentHousing = require('../models/rentHouseModel.js');
+const SaleHousing = require('../models/saleHouseModel.js');
 const multer = require('multer');
 const path = require('path');
 
@@ -36,11 +36,11 @@ const searchpage = (req, res) => {
     res.render('search', { title: 'search-page' });
 }
 
-// Render "For Sale" page
-const forsale = (req, res) => {
-    res.render('forSalePage', { title: 'for-sale-page' });
-}
-
+// 
+// 
+// 
+// 
+//RENT
 // Render "For Rent" page
 const forrent = (req, res) => {
     res.render('forRentPage', { title: 'for-rent-page' });
@@ -60,7 +60,7 @@ const post_rent_house = (req, res) => {
         const fullViewPicture = req.files['fullViewPicture'] ? req.files['fullViewPicture'][0].filename : ''; 
         const roomPictures = req.files['roomPicture[]'] ? req.files['roomPicture[]'].map(file => file.filename) : []; 
 
-        const renthousing = new RentHousing({
+        const rentHousing = new RentHousing({
             fullViewPicture: fullViewPicture,
             number_of_rooms: req.body.number_of_rooms,
             roomPicture: roomPictures, 
@@ -68,10 +68,9 @@ const post_rent_house = (req, res) => {
             luxuryHouse: req.body.luxuryHouse,
             location: req.body.location,
             description: req.body.description,
-            type: 'rent', 
         });
 
-        renthousing.save()
+        rentHousing.save()
             .then((result) => {
                 res.redirect('/home');
             })
@@ -85,6 +84,16 @@ const post_rent_house = (req, res) => {
     }
 };
 
+// 
+// 
+// 
+// 
+// SALE
+// Render "For Sale" page
+const forsale = (req, res) => {
+    res.render('forSalePage', { title: 'for-sale-page' });
+}
+
 // Render the form for posting a house for sale
 const get_sale_house = (req, res) => {
     res.render('saleHousePost', { title: 'sale-house-post' });
@@ -93,21 +102,20 @@ const get_sale_house = (req, res) => {
 // Handle the POST request for posting a house for sale
 const post_sale_house = (req, res) => {
     try {
-        const fullViewPicture = req.files['fullViewPicture'][0].filename; // Single full view picture
-        const roomPictures = req.files['roomPicture[]'].map(file => file.filename); // Array of uploaded room picture filenames
+        const fullViewPicture = req.files['fullViewPicture'][0].filename; 
+        const roomPictures = req.files['roomPicture[]'].map(file => file.filename);
 
-        const housing = new Housing({
+        const saleHousing = new SaleHousing({
             fullViewPicture: fullViewPicture,
             number_of_rooms: req.body.number_of_rooms,
-            roomPicture: roomPictures, // Store array of room picture filenames
+            roomPicture: roomPictures, 
             price: req.body.price,
             luxuryHouse: req.body.luxuryHouse,
             location: req.body.location,
             description: req.body.description,
-            type: 'sale', // Set the house type to sale
         });
 
-        housing.save()
+        saleHousing.save()
             .then(() => res.redirect('/home'))
             .catch(err => {
                 console.log(err);
@@ -119,6 +127,11 @@ const post_sale_house = (req, res) => {
     }
 };
 
+// 
+// 
+// 
+// 
+// HOTEL
 // Render the form for posting hotel rooms
 const get_hotel_rooms = (req, res) => {
     res.render('hotelRoomPost', { title: 'hotel_rooms-post' });
