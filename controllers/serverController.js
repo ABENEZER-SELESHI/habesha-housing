@@ -43,7 +43,16 @@ const searchpage = (req, res) => {
 //RENT
 // Render "For Rent" page
 const forrent = (req, res) => {
-    res.render('forRentPage', { title: 'for-rent-page' });
+    
+    console.log(9)
+    RentHousing.find().sort({createdAt: -1})
+        .then((result) => {
+            // res.send(result);
+            res.render('forRentPage', { title: 'for-rent-page', renthousings: result});
+        })
+        .catch((err) => {
+            console.log(err);
+        })
 }
 
 // Render the form for posting a house for rent
@@ -91,7 +100,15 @@ const post_rent_house = (req, res) => {
 // SALE
 // Render "For Sale" page
 const forsale = (req, res) => {
-    res.render('forSalePage', { title: 'for-sale-page' });
+    console.log(9)
+    SaleHousing.find().sort({createdAt: -1})
+        .then((result) => {
+            // res.send(result);
+            res.render('forSalePage', { title: 'for-sale-page', salehousings: result});
+        })
+        .catch((err) => {
+            console.log(err);
+        })
 }
 
 // Render the form for posting a house for sale

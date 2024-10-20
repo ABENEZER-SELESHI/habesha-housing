@@ -1,7 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const Housing = require('./models/serverModel.js');
 const authRoutes = require('./routes/authRoutes');
 const serverRoutes = require('./routes/serverRoutes');
 
@@ -18,8 +17,9 @@ app.set('view engine', 'ejs');
 
 // Middleware
 app.use(express.static('styles'));
-app.use(express.urlencoded({ extended: false })); // Parse URL-encoded bodies
-app.use(express.json()); // Parse JSON bodies
+app.use(express.static('assets'));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 app.use(morgan('dev'));
 app.use('/', authRoutes);
 app.use('/', serverRoutes);

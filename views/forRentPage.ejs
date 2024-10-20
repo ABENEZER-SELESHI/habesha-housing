@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="forRentPage.css">
+    <link rel="stylesheet" href="headbar.css">
     <title>Document</title>
 </head>
 <body>
@@ -13,7 +15,25 @@
         <!-- title -->
         <h1>Rented homes</h1>
 
-
+        <div>
+            <% if (renthousings.length > 0) { %>
+                <% renthousings.forEach(renthousing => { %>
+                    <a href="/for-rent/<%= renthousing._id %>">
+                        <div class="card-container">
+                            <div>
+                                <img class="card-image" src="<%= renthousing.fullViewPicture %>" alt="">
+                            </div>
+                            <div class="card-content">
+                                <div class="card-price"><%= renthousing.price %></div>
+                                <div class="card-rooms"><%= renthousing.number_of_rooms %></div>
+                            </div>
+                        </div>
+                    </a>
+                <% }) %>
+            <% } else { %>
+                <p>No houses available for sale at the moment, please visit us another time.</p>
+            <% } %>    
+        </div>
     </section>
 </body>
 </html>
