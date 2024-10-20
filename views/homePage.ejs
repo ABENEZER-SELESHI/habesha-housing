@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="homePage.css">
+    <link rel="stylesheet" href="headbar.css">
+    <title>Home - Lysena</title>
+</head>
+<body>
+    <!-- Navbar -->
+    <%- include('./nav/headbar.ejs') %>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1>OUR BUILDINGS INTEGRATE THE BEST COSY HOMES</h1>
+            <button class="cta-button">Showcase the Best Deals</button>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <h2>Find Your Dream Home</h2>
+        <form action="/search" method="GET" class="search-form">
+            <div class="form-group">
+                <label for="location">Location Area</label>
+                <input type="text" id="location" name="location" placeholder="Enter location">
+            </div>
+            <div class="form-group">
+                <label for="priceRange">Price Range</label>
+                <input type="text" id="priceRange" name="priceRange" placeholder="Enter price range(a-b)">
+            </div>
+            <div class="form-group">
+                <label for="rooms">Number of Rooms</label>
+                <input type="number" id="rooms" name="rooms" placeholder="Enter number of rooms">
+            </div>
+            <button type="submit" class="search-button">Search</button>
+        </form>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories">
+        <div class="category-tabs">
+            <a href="#">Landscape</a>
+            <a href="#">Commercial</a>
+            <a href="#">Residential</a>
+            <a href="#">Industrial</a>
+            <a href="#">Urban</a>
+        </div>
+    </section>
+
+    <!-- Properties Section -->
+    <section class="properties">
+        <div class="property-card" style="background-image: url('../assets/images/3i3_urcj.jpg');">
+            <h2>Popular Houses</h2>
+        </div>
+
+        <div class="property-card" style="background-image: url('../assets/images/Luxury home.jpg');">
+            <h2>Luxury Houses</h2>
+        </div>
+
+        <div class="property-card">
+            <h2>Let's Create Beautiful Spaces Together!</h2>
+            <p>Our top specialists will help you create the project of your dreams.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; abenezer seleshi. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
