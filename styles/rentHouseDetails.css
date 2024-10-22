@@ -39,24 +39,68 @@ body {
     border-radius: 10px;
 }
 
-.thumbnail-images {
+/* FullHousePictures Slider */
+.slider-container {
     display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
     gap: 10px;
     margin-top: 15px;
 }
 
-.thumbnail-images img {
+.slider-container img {
+    max-width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Room Types and Pictures */
+.room-section {
+    margin-top: 20px;
+}
+
+.room-section h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.room-pictures {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+}
+
+.room-pictures img {
+    cursor: pointer;
     width: 100px;
     height: 100px;
     object-fit: cover;
-    cursor: pointer;
     border: 1px solid #ddd;
     border-radius: 8px;
     transition: transform 0.2s ease;
 }
 
-.thumbnail-images img:hover {
+.room-pictures img:hover {
     transform: scale(1.05);
+}
+
+/* Large Image Display */
+.large-image-display {
+    margin-top: 20px;
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+.large-image-display img {
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
 }
 
 /* House Information */

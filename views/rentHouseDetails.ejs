@@ -15,17 +15,25 @@
         <!-- Main Section -->
         <section class="house-details">
             <div class="house-images">
-                <!-- Main Image -->
-                <div class="main-image">
-                    <img src="<%= renthousing.fullViewPicture %>" alt="Main View" />
+                <!-- Full House Pictures Slider -->
+                <div class="slider-container">
+                    <img src="<%= renthousing.fullHousePictures[0] %>" alt="Full View 1" class="slider-image">
+                    <img src="<%= renthousing.fullHousePictures[1] %>" alt="Full View 2" class="slider-image">
+                    <img src="<%= renthousing.fullHousePictures[2] %>" alt="Full View 3" class="slider-image">
                 </div>
 
-                <!-- Thumbnail Images -->
-                <div class="thumbnail-images">
-                    <% renthousing.roomPicture.forEach(function(image, index) { %>
-                        <img src="<%= image %>" alt="Room <%= index + 1 %>" class="thumbnail" />
-                    <% }) %>
-                </div>
+                <!-- Room Types and Pictures -->
+                <% renthousing.rooms.forEach(function(room) { %>
+                    <div class="room-section">
+                        <h2><%= room.roomType %></h2>
+                        <div class="room-pictures">
+                            <% room.roomPictures.slice(0, 6).forEach(function(picture, index) { %>
+                                <img src="<%= picture %>" alt="<%= room.roomType %> Picture <%= index + 1 %>" 
+                                     onclick="displayLargeImage('<%= picture %>')">
+                            <% }) %>
+                        </div>
+                    </div>
+                <% }) %>
             </div>
 
             <!-- House Information -->
@@ -35,16 +43,16 @@
                 
                 <div class="details">
                     <p><strong>Price:</strong> $<%= renthousing.price %></p>
-                    <p><strong>Rooms:</strong> <%= renthousing.number_of_rooms %> rooms</p>
+                    <p><strong>Rooms:</strong> <%= renthousing.rooms.length %> types</p>
                     <p><strong>Location:</strong> <%= renthousing.location %></p>
                 </div>
-
-                <!-- Action Buttons -->
-                <div class="actions">
-                    <button class="btn add-to-cart">Add to cart</button>
-                    <button class="btn contact-seller">Contact Seller</button>
-                </div>
             </div>
+
+            <!-- Large Image Display Section -->
+            <div class="large-image-display" id="largeImageDisplay">
+                <!-- Clicked image will be displayed here -->
+            </div>
+
         </section>
 
         <!-- Footer -->
@@ -52,5 +60,13 @@
             <p>&copy; 2024 Abenezer Seleshi. All Rights Reserved.</p>
         </footer>
     </div>
+
+    <script>
+        // Function to display the clicked image in a larger size
+        function displayLargeImage(imageSrc) {
+            const largeImageDisplay = document.getElementById('largeImageDisplay');
+            largeImageDisplay.innerHTML = `<img src="${imageSrc}" alt="Large View">`;
+        }
+    </script>
 </body>
 </html>
