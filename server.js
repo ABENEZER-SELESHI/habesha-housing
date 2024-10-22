@@ -18,6 +18,7 @@ app.set('view engine', 'ejs');
 // Middleware
 app.use(express.static('styles'));
 app.use(express.static('assets'));
+app.use(express.static('uploads'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(morgan('dev'));
@@ -29,10 +30,12 @@ app.get('/about-us', (req, res) => {
     res.render('aboutPage', { title: 'about-us-page' });
 });
 
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 // 404 Page
 app.use((req, res) => {
     res.status(404).render('404Page');
 });
 
 app.listen(3000);
-console.log('http://localhost:3000');
+console.log('http://localhost:3000/home');

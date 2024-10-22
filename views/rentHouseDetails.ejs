@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="rentHouseDetails.css">
+    <link rel="stylesheet" href="headbar.css">
+    <title>Luxury House Details</title>
+</head>
+<body>
+    <!-- Navbar -->
+    <%- include('./nav/headbar.ejs') %>
+
+    <div class="container">
+        <!-- Main Section -->
+        <section class="house-details">
+            <div class="house-images">
+                <!-- Main Image -->
+                <div class="main-image">
+                    <img src="<%= renthousing.fullViewPicture %>" alt="Main View" />
+                </div>
+
+                <!-- Thumbnail Images -->
+                <div class="thumbnail-images">
+                    <% renthousing.roomPicture.forEach(function(image, index) { %>
+                        <img src="<%= image %>" alt="Room <%= index + 1 %>" class="thumbnail" />
+                    <% }) %>
+                </div>
+            </div>
+
+            <!-- House Information -->
+            <div class="house-info">
+                <h2>Luxury House in <%= renthousing.location %></h2>
+                <p class="description"><%= renthousing.description %></p>
+                
+                <div class="details">
+                    <p><strong>Price:</strong> $<%= renthousing.price %></p>
+                    <p><strong>Rooms:</strong> <%= renthousing.number_of_rooms %> rooms</p>
+                    <p><strong>Location:</strong> <%= renthousing.location %></p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="actions">
+                    <button class="btn add-to-cart">Add to cart</button>
+                    <button class="btn contact-seller">Contact Seller</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2024 Abenezer Seleshi. All Rights Reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

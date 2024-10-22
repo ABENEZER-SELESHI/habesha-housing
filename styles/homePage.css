@@ -92,14 +92,11 @@ body {
     width: 250px;
     height: 300px;
     position: relative;
+    transition: transform 0.3s ease;
 }
 
 .property-card:hover {
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    width: 300px;
-    height: 360px;
-    margin: 0;
+    transform: scale(1.10);
 }
 
 .property-card h2 {

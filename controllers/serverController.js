@@ -1,7 +1,8 @@
-// serverController.js
+//serverController.js
 const RentHousing = require('../models/rentHouseModel.js');
 const SaleHousing = require('../models/saleHouseModel.js');
 const multer = require('multer');
+const mongoose = require('mongoose');
 const path = require('path');
 
 // Set up multer for file uploads
@@ -36,23 +37,16 @@ const searchpage = (req, res) => {
     res.render('search', { title: 'search-page' });
 }
 
-// 
-// 
-// 
-// 
-//RENT
+// RENT
 // Render "For Rent" page
 const forrent = (req, res) => {
-    
-    console.log(9)
     RentHousing.find().sort({createdAt: -1})
         .then((result) => {
-            // res.send(result);
-            res.render('forRentPage', { title: 'for-rent-page', renthousings: result});
+            res.render('forRentPage', { title: 'for-rent-page', renthousings: result });
         })
         .catch((err) => {
             console.log(err);
-        })
+        });
 }
 
 // Render the form for posting a house for rent
@@ -60,21 +54,59 @@ const get_rent_house = (req, res) => {
     res.render('rentHousePost', { title: 'rent-house-post' });
 }
 
+// Middleware for handling file uploads
+const post_rent_house_middleware = upload.fields([
+    { name: 'fullHousePictures1', maxCount: 1 },
+    { name: 'fullHousePictures2', maxCount: 1 },
+    { name: 'fullHousePictures3', maxCount: 1 },
+    { name: 'roomPictures_Living Room', maxCount: 10 },
+    { name: 'roomPictures_Bedroom', maxCount: 10 },
+    { name: 'roomPictures_Kitchen', maxCount: 10 },
+    { name: 'roomPictures_Bathroom', maxCount: 10 },
+    { name: 'roomPictures_Storage Room', maxCount: 10 },
+    { name: 'roomPictures_Garage', maxCount: 10 },
+    { name: 'roomPictures_Specific Kind', maxCount: 10 }
+]);
+
 // Handle the POST request for posting a house for rent
 const post_rent_house = (req, res) => {
+    console.log(req.body);
     try {
-        console.log(req.files); 
+        console.log(req.files);
 
-        // Check if files are present
-        const fullViewPicture = req.files['fullViewPicture'] ? req.files['fullViewPicture'][0].filename : ''; 
-        const roomPictures = req.files['roomPicture[]'] ? req.files['roomPicture[]'].map(file => file.filename) : []; 
+        // Extract the three full-house pictures
+        const fullHousePictures = [
+            req.files['fullHousePictures1'][0].filename,
+            req.files['fullHousePictures2'][0].filename,
+            req.files['fullHousePictures3'][0].filename
+        ];
+
+        // Ensure roomTypes is always treated as an array
+        let roomTypes = req.body.roomTypes || [];
+        if (!Array.isArray(roomTypes)) {
+            roomTypes = [roomTypes];  // Convert to an array if it's a single string
+        }
+
+        if (roomTypes.length === 0) {
+            return res.status(400).send('At least one room type must be selected.');
+        }
+
+        const rooms = [];
+        roomTypes.forEach((roomType) => {
+            const numberOfRooms = req.body[`numberOf${roomType}s`];
+            const roomPictures = req.files[`roomPictures_${roomType}`]?.map(file => file.filename) || [];
+
+            rooms.push({
+                roomType: roomType,
+                numberOfRooms: numberOfRooms,
+                roomPictures: roomPictures
+            });
+        });
 
         const rentHousing = new RentHousing({
-            fullViewPicture: fullViewPicture,
-            number_of_rooms: req.body.number_of_rooms,
-            roomPicture: roomPictures, 
+            fullHousePictures: fullHousePictures,
+            rooms: rooms,
             price: req.body.price,
-            luxuryHouse: req.body.luxuryHouse,
             location: req.body.location,
             description: req.body.description,
         });
@@ -93,22 +125,40 @@ const post_rent_house = (req, res) => {
     }
 };
 
-// 
-// 
-// 
-// 
+
+const rent_details = async (req, res) => {
+    const id = req.params.id;
+    console.log("ID received:", id);
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        console.log("Invalid ObjectId");
+        return res.status(400).send('Invalid Rent House ID.');
+    }
+
+    try {
+        const renthousing = await RentHousing.findById(id);
+        if (!renthousing) {
+            console.log("Rent house not found in the database");
+            return res.status(404).send('Rent House not found.');
+        }
+        console.log("Rent house found:", renthousing);
+        return res.render('rentHouseDetails', { renthousing: renthousing, title: "detail" });
+    } catch (error) {
+        console.error("Error during database query:", error);
+        return res.status(500).send('An error occurred while retrieving rent house details.');
+    }
+};
+
 // SALE
 // Render "For Sale" page
 const forsale = (req, res) => {
-    console.log(9)
-    SaleHousing.find().sort({createdAt: -1})
+    SaleHousing.find().sort({ createdAt: -1 })
         .then((result) => {
-            // res.send(result);
-            res.render('forSalePage', { title: 'for-sale-page', salehousings: result});
+            res.render('forSalePage', { title: 'for-sale-page', salehousings: result });
         })
         .catch((err) => {
             console.log(err);
-        })
+        });
 }
 
 // Render the form for posting a house for sale
@@ -119,13 +169,13 @@ const get_sale_house = (req, res) => {
 // Handle the POST request for posting a house for sale
 const post_sale_house = (req, res) => {
     try {
-        const fullViewPicture = req.files['fullViewPicture'][0].filename; 
+        const fullViewPicture = req.files['fullViewPicture'][0].filename;
         const roomPictures = req.files['roomPicture[]'].map(file => file.filename);
 
         const saleHousing = new SaleHousing({
             fullViewPicture: fullViewPicture,
             number_of_rooms: req.body.number_of_rooms,
-            roomPicture: roomPictures, 
+            roomPicture: roomPictures,
             price: req.body.price,
             luxuryHouse: req.body.luxuryHouse,
             location: req.body.location,
@@ -144,15 +194,15 @@ const post_sale_house = (req, res) => {
     }
 };
 
-// 
-// 
-// 
-// 
-// HOTEL
-// Render the form for posting hotel rooms
+// Define get_hotel_rooms controller
 const get_hotel_rooms = (req, res) => {
-    res.render('hotelRoomPost', { title: 'hotel_rooms-post' });
-};
+    res.render('hotelRoomsForm', { title: 'hotel-rooms-post' });
+}
+
+// Define post_hotel controller
+const post_hotel = (req, res) => {
+    res.send('Hotel posted successfully!'); // Adjust to your actual implementation
+}
 
 // Export the controller functions
 module.exports = {
@@ -162,14 +212,12 @@ module.exports = {
     get_rent_house,
     get_sale_house,
     searchpage,
-    get_hotel_rooms,
-    // Multer middleware to handle file uploads
-    post_rent_house: [upload.fields([
-        { name: 'fullViewPicture', maxCount: 1 },  // Single full view picture
-        { name: 'roomPicture[]', maxCount: 10 }    // Multiple room pictures
-    ]), post_rent_house],
+    rent_details,
+    post_rent_house: [post_rent_house_middleware, post_rent_house],
     post_sale_house: [upload.fields([
         { name: 'fullViewPicture', maxCount: 1 },  // Single full view picture
         { name: 'roomPicture[]', maxCount: 10 }    // Multiple room pictures
-    ]), post_sale_house]
+    ]), post_sale_house],
+    get_hotel_rooms,
+    post_hotel
 };
