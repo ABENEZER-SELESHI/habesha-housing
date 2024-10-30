@@ -18,14 +18,15 @@
         <div class="card-collection">
             <% if (renthousings.length > 0) { %>
                 <% renthousings.forEach(renthousing => { %>
-                    <a href="/<%= renthousing._id %>">
+                    <a href="/rent/<%= renthousing._id %>">
                         <div class="card-container">
                             <div>
-                                <img class="card-image" src="<%= renthousing.fullViewPicture %>" alt="">
+                                <img class="card-image" src="<%= renthousing.fullHousePictures[0] %>" alt="">
                             </div>
                             <div class="card-content">
                                 <div class="card-price">$<%= renthousing.price %></div>
-                                <div class="card-rooms"><%= renthousing.number_of_rooms %> rooms</div>
+                                <div class="card-rooms">#</div>
+
                             </div>
                         </div>
                     </a>

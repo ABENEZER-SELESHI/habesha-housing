@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="forSalePage.css">
+    <link rel="stylesheet" href="forRentPage.css">
     <link rel="stylesheet" href="headbar.css">
     <title>Document</title>
 </head>
@@ -18,14 +18,15 @@
         <div class="card-collection">
             <% if (salehousings.length > 0) { %>
                 <% salehousings.forEach(salehousing => { %>
-                    <a href="/<%= salehousing._id %>">
+                    <a href="/sale/<%= salehousing._id %>">
                         <div class="card-container">
                             <div>
-                                <img class="card-image" src="<%= salehousing.fullViewPicture %>" alt="">
+                                <img class="card-image" src="<%= salehousing.fullHousePictures[0] %>" alt="">
                             </div>
                             <div class="card-content">
                                 <div class="card-price">$<%= salehousing.price %></div>
-                                <div class="card-rooms"><%= salehousing.number_of_rooms %> rooms</div>
+                                <div class="card-rooms">#</div>
+                                
                             </div>
                         </div>
                     </a>

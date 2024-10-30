@@ -32,8 +32,9 @@ const renthousingSchema = new Schema({
         required: true,
     },
     location: {
-        type: String,
+        type: [String],
         required: true,
+        validate: [locationParLimit, 'must have exactly two values']
     },
     description: {
         type: String,
@@ -43,6 +44,10 @@ const renthousingSchema = new Schema({
 // Ensure only exactly three full house pictures are uploaded
 function arrayLimit(val) {
     return val.length === 3;
+}
+
+function locationParLimit(val) {
+    return val.length === 2;
 }
 
 // Ensure that at least one room type is chosen

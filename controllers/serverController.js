@@ -78,7 +78,7 @@ const post_rent_house = (req, res) => {
         const fullHousePictures = [
             req.files['fullHousePictures1'][0].filename,
             req.files['fullHousePictures2'][0].filename,
-            req.files['fullHousePictures3'][0].filename
+            req.files['fullHousePictures3'][0].filename,
         ];
 
         // Ensure roomTypes is always treated as an array
@@ -107,7 +107,7 @@ const post_rent_house = (req, res) => {
             fullHousePictures: fullHousePictures,
             rooms: rooms,
             price: req.body.price,
-            location: req.body.location,
+            location: [req.body.latitude, req.body.longitude],
             description: req.body.description,
         });
 
@@ -166,25 +166,69 @@ const get_sale_house = (req, res) => {
     res.render('saleHousePost', { title: 'sale-house-post' });
 }
 
+// Middleware for handling file uploads
+const post_sale_house_middleware = upload.fields([
+    { name: 'fullHousePictures1', maxCount: 1 },
+    { name: 'fullHousePictures2', maxCount: 1 },
+    { name: 'fullHousePictures3', maxCount: 1 },
+    { name: 'roomPictures_Living Room', maxCount: 10 },
+    { name: 'roomPictures_Bedroom', maxCount: 10 },
+    { name: 'roomPictures_Kitchen', maxCount: 10 },
+    { name: 'roomPictures_Bathroom', maxCount: 10 },
+    { name: 'roomPictures_Storage Room', maxCount: 10 },
+    { name: 'roomPictures_Garage', maxCount: 10 },
+    { name: 'roomPictures_Specific Kind', maxCount: 10 }
+]);
+
 // Handle the POST request for posting a house for sale
 const post_sale_house = (req, res) => {
+    console.log(req.body);
     try {
-        const fullViewPicture = req.files['fullViewPicture'][0].filename;
-        const roomPictures = req.files['roomPicture[]'].map(file => file.filename);
+        console.log(req.files);
+
+        // Extract the three full-house pictures
+        const fullHousePictures = [
+            req.files['fullHousePictures1'][0].filename,
+            req.files['fullHousePictures2'][0].filename,
+            req.files['fullHousePictures3'][0].filename,
+        ];
+
+        // Ensure roomTypes is always treated as an array
+        let roomTypes = req.body.roomTypes || [];
+        if (!Array.isArray(roomTypes)) {
+            roomTypes = [roomTypes];  // Convert to an array if it's a single string
+        }
+
+        if (roomTypes.length === 0) {
+            return res.status(400).send('At least one room type must be selected.');
+        }
+
+        const rooms = [];
+        roomTypes.forEach((roomType) => {
+            const numberOfRooms = req.body[`numberOf${roomType}s`];
+            const roomPictures = req.files[`roomPictures_${roomType}`]?.map(file => file.filename) || [];
+
+            rooms.push({
+                roomType: roomType,
+                numberOfRooms: numberOfRooms,
+                roomPictures: roomPictures
+            });
+        });
 
         const saleHousing = new SaleHousing({
-            fullViewPicture: fullViewPicture,
-            number_of_rooms: req.body.number_of_rooms,
-            roomPicture: roomPictures,
+            fullHousePictures: fullHousePictures,
+            rooms: rooms,
             price: req.body.price,
-            luxuryHouse: req.body.luxuryHouse,
-            location: req.body.location,
+            status: false,
+            location: [req.body.latitude, req.body.longitude],
             description: req.body.description,
         });
 
         saleHousing.save()
-            .then(() => res.redirect('/home'))
-            .catch(err => {
+            .then((result) => {
+                res.redirect('/for-sale');
+            })
+            .catch((err) => {
                 console.log(err);
                 res.status(500).send('Error saving the sale house.');
             });
@@ -194,15 +238,30 @@ const post_sale_house = (req, res) => {
     }
 };
 
-// Define get_hotel_rooms controller
-const get_hotel_rooms = (req, res) => {
-    res.render('hotelRoomsForm', { title: 'hotel-rooms-post' });
-}
+const sale_details = async (req, res) => {
+    const id = req.params.id;
+    console.log("ID received:", id);
 
-// Define post_hotel controller
-const post_hotel = (req, res) => {
-    res.send('Hotel posted successfully!'); // Adjust to your actual implementation
-}
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        console.log("Invalid ObjectId");
+        return res.status(400).send('Invalid Sale House ID.');
+    }
+
+    try {
+        const salehousing = await SaleHousing.findById(id);
+        if (!salehousing) {
+            console.log("Sale house not found in the database");
+            return res.status(404).send('Sale House not found.');
+        }
+        console.log("sale house found:", salehousing);
+        return res.render('saleHouseDetails', { salehousing: salehousing, title: "detail" });
+    } catch (error) {
+        console.error("Error during database query:", error);
+        return res.status(500).send('An error occurred while retrieving sale house details.');
+    }
+};
+
+
 
 // Export the controller functions
 module.exports = {
@@ -213,11 +272,7 @@ module.exports = {
     get_sale_house,
     searchpage,
     rent_details,
+    sale_details,
     post_rent_house: [post_rent_house_middleware, post_rent_house],
-    post_sale_house: [upload.fields([
-        { name: 'fullViewPicture', maxCount: 1 },  // Single full view picture
-        { name: 'roomPicture[]', maxCount: 10 }    // Multiple room pictures
-    ]), post_sale_house],
-    get_hotel_rooms,
-    post_hotel
+    post_sale_house: [post_sale_house_middleware, post_sale_house],
 };

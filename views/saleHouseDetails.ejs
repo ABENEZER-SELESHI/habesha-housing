@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="rentHouseDetails.css">
+    <link rel="stylesheet" href="saleHouseDetails.css">
     <link rel="stylesheet" href="headbar.css">
     <title>Luxury House Details</title>
 </head>
@@ -17,13 +17,13 @@
             <div class="house-images">
                 <!-- Full House Pictures Slider -->
                 <div class="slider-container">
-                    <img src="<%= renthousing.fullHousePictures[0] %>" alt="Full View 1" class="slider-image">
-                    <img src="<%= renthousing.fullHousePictures[1] %>" alt="Full View 2" class="slider-image">
-                    <img src="<%= renthousing.fullHousePictures[2] %>" alt="Full View 3" class="slider-image">
+                    <img src="<%= salehousing.fullHousePictures[0] %>" alt="Full View 1" class="slider-image">
+                    <img src="<%= salehousing.fullHousePictures[1] %>" alt="Full View 2" class="slider-image">
+                    <img src="<%= salehousing.fullHousePictures[2] %>" alt="Full View 3" class="slider-image">
                 </div>
 
                 <!-- Room Types and Pictures -->
-                <% renthousing.rooms.forEach(function(room) { %>
+                <% salehousing.rooms.forEach(function(room) { %>
                     <div class="room-section">
                         <h2><%= room.roomType %></h2>
                         <div class="room-pictures">
@@ -38,13 +38,13 @@
 
             <!-- House Information -->
             <div class="house-info">
-                <h2>Luxury House in <%= renthousing.location %></h2>
-                <p class="description"><%= renthousing.description %></p>
+                <h2>Luxury House in <%= salehousing.location %></h2>
+                <p class="description"><%= salehousing.description %></p>
                 
                 <div class="details">
-                    <p><strong>Price:</strong> $<%= renthousing.price %></p>
-                    <p><strong>Rooms:</strong> <%= renthousing.rooms.length %> types</p>
-                    <p><strong>Location:</strong> <%= renthousing.location %></p>
+                    <p><strong>Price:</strong> $<%= salehousing.price %></p>
+                    <p><strong>Rooms:</strong> <%= salehousing.rooms.length %> types</p>
+                    <p><strong>Location:</strong> <%= salehousing.location %></p>
                     <span>
                         <button class="submit btn">Buy</button>
                     </span>
