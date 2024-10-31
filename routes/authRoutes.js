@@ -1,18 +1,12 @@
 const express = require('express');
-const { Router } = require('express');
-
 const authController = require('../controllers/authController');
-
 const router = express.Router();
 
+// Apply `upload.single('image')` to handle image file upload
 router.get('/signup', authController.signup_get);
-router.post('/signup', authController.signup_post);
-
-router.get('/register', authController.register_get);
-router.post('/register', authController.register_post);
+router.post('/signup', authController.upload.single('image'), authController.signup_post);
 
 router.get('/login', authController.login_get);
 router.post('/login', authController.login_post);
-//  router.post('/logout', );
 
 module.exports = router;

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const serverControllers = require('../controllers/serverController');
 
+
 // Home page
 router.get('/home', serverControllers.homepage);
 
