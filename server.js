@@ -1,8 +1,10 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken'); 
 const authRoutes = require('./routes/authRoutes');
 const serverRoutes = require('./routes/serverRoutes');
+require('dotenv').config();
 
 const app = express();
 
@@ -24,6 +26,22 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use('/', authRoutes);
 app.use('/', serverRoutes);
+
+//token route
+app.get('/verify/:token', (req, res)=>{ 
+	const {token} = req.params; 
+
+	// Verifying the JWT token 
+	jwt.verify(token, 'ourSecretKey', function(err, decoded) { 
+		if (err) { 
+			console.log(err); 
+			res.status(400).json({ error: "Email verification failed, possibly the link is     invalid or expired" });
+		} 
+		else { 
+			res.status(200).json({ message: "Email verified successfully"});
+		} 
+	}); 
+}); 
 
 // About Page
 app.get('/about-us', (req, res) => {
